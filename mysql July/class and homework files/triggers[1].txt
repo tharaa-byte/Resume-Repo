@@ -1,0 +1,167 @@
+-- Create departments table
+CREATE TABLE departments(
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+
+-- Insert sample data into departments table
+INSERT INTO departments (department_id, department_name) VALUES
+(1, 'HR'),
+(2, 'Engineering'),
+(3, 'Marketing');
+
+-- Create employees table
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(50),
+    department_id INT,
+    salary DECIMAL(10, 2),
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+
+-- Insert sample data into employees table
+INSERT INTO employees (employee_id, employee_name, department_id, salary) VALUES
+(1, 'Alice', 1, 50000),
+(2, 'Bob', 2, 60000),
+(3, 'Charlie', 2, 70000),
+(4, 'David', 3, 40000),
+(5, 'Eve', 1, 45000);
+
+-- Create audit_log table to store logs
+CREATE TABLE audit_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    log_message VARCHAR(255),
+    log_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
+_________________________________________________________________________________
+
+Trigger Before Insert
+
+DELIMITER $$
+
+CREATE TRIGGER BeforeInsertEmployee
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF salary < 30000 THEN
+        SET salary = 30000
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+_________________________________________________________________________________
+
+Trigger After Insert
+
+DELIMITER $$
+
+CREATE TRIGGER AfterInsertEmployee
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (log_message) 
+    VALUES (CONCAT('New employee added: ', NEW.employee_name));
+END$$
+
+DELIMITER ;
+
+
+
+____________________________________________________________________________________
+
+
+
+
+____________________________________________________________________________________
+
+
+Trigger Before Update
+
+
+DELIMITER $$
+
+CREATE TRIGGER BeforeUpdateEmployee
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary < OLD.salary THEN
+        SET NEW.salary = OLD.salary;
+    END IF;
+END$$
+
+DELIMITER ;
+
+_____________________________________________________________________________________
+
+
+Trigger After Update
+
+DELIMITER $$
+
+CREATE TRIGGER AfterUpdateEmployee
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (log_message)
+    VALUES (CONCAT('Employee ', NEW.employee_name, ' salary updated from ', OLD.salary, ' to ', NEW.salary));
+END$$
+
+DELIMITER ;
+
+________________________________________________________________________________________
+
+Testing the Triggers
+
+
+Trigger Before Delete
+
+DELIMITER $$
+
+CREATE TRIGGER BeforeDeleteEmployee
+BEFORE DELETE ON employees
+FOR EACH ROW
+BEGIN
+    IF OLD.department_id = (SELECT department_id FROM departments WHERE department_name = 'Engineering') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot delete employees from Engineering department';
+    END IF;
+END$$
+
+DELIMITER ;
+
+____________________________________________________________________________________________
+
+
+Insert a New Employee
+
+INSERT INTO employees (employee_id, employee_name, department_id, salary)
+VALUES (6, 'Frank', 2, 25000);  -- This will trigger BeforeInsertEmployee
+
+Update an Employee's Salary
+
+UPDATE employees
+SET salary = 29000
+WHERE employee_id = 1;  -- This will trigger BeforeUpdateEmployee and AfterUpdateEmployee
+
+Delete an Employee
+
+DELETE FROM employees
+WHERE employee_id = 3;  -- This will trigger BeforeDeleteEmployee
+
+Check the Audit Log
+DELETE FROM employees
+WHERE employee_id = 3;
+
+
+
+
+
+_______________________________________________________________________________________________
+
+

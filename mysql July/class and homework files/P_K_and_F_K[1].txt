@@ -1,0 +1,193 @@
+-- Create departments table
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+
+-- Create employees table with a foreign key reference to departments
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+
+-- Insert data into departments table
+INSERT INTO departments (department_id, department_name) VALUES
+(1, 'HR'),
+(2, 'IT'),
+(3, 'Finance'),
+(4, 'Marketing');
+
+-- Insert data into employees table
+INSERT INTO employees (employee_id, first_name, last_name, department_id) VALUES
+(1, 'Alice', 'Smith', 1),
+(2, 'Bob', 'Johnson', 2),
+(3, 'Charlie', 'Brown', 3),
+(4, 'David', 'Davis', 4),
+(5, 'Eve', 'Miller', 2);
+
+_________________________________________________________________________________________________________________
+
+
+
+-- Create departments table
+CREATE TABLE departments1 (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+
+-- Create employees table with a foreign key reference to departments
+CREATE TABLE employees1 (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department_id INT
+    
+);
+
+
+
+-- Insert data into departments table
+INSERT INTO departments1 (department_id, department_name) VALUES
+(1, 'HR'),
+(2, 'IT'),
+(3, 'Finance'),
+(4, 'Marketing');
+
+-- Insert data into employees table
+INSERT INTO employees1 (employee_id, first_name, last_name, department_id) VALUES
+(1, 'Alice', 'Smith', 1),
+(2, 'Bob', 'Johnson', 2),
+(3, 'Charlie', 'Brown', 3),
+(4, 'David', 'Davis', 4),
+(5, 'Eve', 'Miller', 2);
+_________________________________________________________________________________________________________________________________________________________
+
+
+
+
+
+
+
+
+show tables;
++------------------+
+| Tables_in_kartik |
++------------------+
+| departments      |
+| departments1     |
+| employees        |
+| employees1       |
++------------------+
+4 rows in set (0.03 sec)
+
+mysql> desc departments;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| department_id   | int         | NO   | PRI | NULL    |       |
+| department_name | varchar(50) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+2 rows in set (0.03 sec)
+
+mysql> desc employees;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| employee_id   | int         | NO   | PRI | NULL    |       |
+| first_name    | varchar(50) | YES  |     | NULL    |       |
+| last_name     | varchar(50) | YES  |     | NULL    |       |
+| department_id | int         | YES  | MUL | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from departments;
++---------------+-----------------+
+| department_id | department_name |
++---------------+-----------------+
+|             1 | HR              |
+|             2 | IT              |
+|             3 | Finance         |
+|             4 | Marketing       |
++---------------+-----------------+
+4 rows in set (0.01 sec)
+
+mysql> select * from employees;
++-------------+------------+-----------+---------------+
+| employee_id | first_name | last_name | department_id |
++-------------+------------+-----------+---------------+
+|           1 | Alice      | Smith     |             1 |
+|           2 | Bob        | Johnson   |             2 |
+|           3 | Charlie    | Brown     |             3 |
+|           4 | David      | Davis     |             4 |
+|           5 | Eve        | Miller    |             2 |
++-------------+------------+-----------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into employees values(6,'naveen','kumar',7);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`kartik`.`employees`, CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`))
+mysql> delete from employees where department_id=4;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> delete from departments where department_id=2;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`kartik`.`employees`, CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`))
+mysql> desc departments1;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| department_id   | int         | NO   | PRI | NULL    |       |
+| department_name | varchar(50) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> desc employees1;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| employee_id   | int         | NO   | PRI | NULL    |       |
+| first_name    | varchar(50) | YES  |     | NULL    |       |
+| last_name     | varchar(50) | YES  |     | NULL    |       |
+| department_id | int         | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> delete from departments1 where department_id=2;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from departments1;
++---------------+-----------------+
+| department_id | department_name |
++---------------+-----------------+
+|             1 | HR              |
+|             3 | Finance         |
+|             4 | Marketing       |
++---------------+-----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employees1;
++-------------+------------+-----------+---------------+
+| employee_id | first_name | last_name | department_id |
++-------------+------------+-----------+---------------+
+|           1 | Alice      | Smith     |             1 |
+|           2 | Bob        | Johnson   |             2 |
+|           3 | Charlie    | Brown     |             3 |
+|           4 | David      | Davis     |             4 |
+|           5 | Eve        | Miller    |             2 |
++-------------+------------+-----------+---------------+
+5 rows in set (0.01 sec)
+
+mysql> insert into departments1 values(2,'IT');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from departments1;
++---------------+-----------------+
+| department_id | department_name |
++---------------+-----------------+
+|             1 | HR              |
+|             2 | IT              |
+|             3 | Finance         |
+|             4 | Marketing       |
++---------------+-----------------+
+4 rows in set (0.00 sec)

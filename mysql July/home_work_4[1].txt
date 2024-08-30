@@ -1,0 +1,54 @@
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    age INT
+);
+
+CREATE TABLE grades (
+    student_id INT,
+    subject VARCHAR(50),
+    grade INT,
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+
+INSERT INTO students (student_id, first_name, last_name, age) VALUES
+(1, 'Alice', 'Smith', 18),
+(2, 'Bob', 'Johnson', 17),
+(3, 'Charlie', 'Brown', 19),
+(4, 'David', 'Davis', 18),
+(5, 'Eve', 'Miller', 17);
+
+INSERT INTO grades (student_id, subject, grade) VALUES
+(1, 'Math', 85),
+(1, 'Science', 90),
+(2, 'Math', 75),
+(2, 'Science', 80),
+(3, 'Math', 92),
+(3, 'Science', 88),
+(4, 'Math', 78),
+(4, 'Science', 85),
+(5, 'Math', 80),
+(5, 'Science', 70);
+
+____________________________________________________________________
+
+
+1)List all students along with their grades in Math and Science.
+select s.student_id,g.grade,g.subject from students as s join grades as g on s.student_id=g.student_id
+where subject="math" or subject= "science";
+
+2)Find the average grade of each student.
+select g.avg(grade),s.student_id from student as s join grades as g on s.student_id=g.student_id;
+
+Find the student(s) with the highest grade in Math.
+
+
+Find the average age of students.
+
+
+List the subjects along with the maximum grade achieved in each subject.
+
+
+
+

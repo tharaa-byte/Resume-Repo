@@ -1,0 +1,120 @@
+DELIMITER $$
+
+CREATE PROCEDURE sp_helloworld_with_greeting(name VARCHAR(100))
+BEGIN
+    SELECT CONCAT('hello ', name) AS greeting;
+END;
+$$
+
+
+CREATE PROCEDURE sp_helloworld(name VARCHAR(100))
+BEGIN
+    SELECT name;
+END;
+$$
+
+DELIMITER ;
+
+
+
+-- Calling the first procedure (with greeting)
+CALL sp_helloworld_with_greeting('John Doe');
+
+-- Calling the second procedure (simply returns the name)
+CALL sp_helloworld('Jane Smith');
+
+
+
+__________________________________________________________________________________________________________________________________________________________
+
+
+
+Simple Stored Procedure to Get Employee Details
+
+DELIMITER $$
+
+CREATE PROCEDURE GetEmployeeDetails()
+BEGIN
+    SELECT * FROM employees;
+END$$
+
+DELIMITER ;
+
+CALL GetEmployeeDetails();
+$$
+
+______________________________________________________
+
+Stored Procedure with Input Parameter
+
+DELIMITER $$
+
+CREATE PROCEDURE GetEmployeesByDepartment(IN dept_id INT) 
+BEGIN
+    SELECT * FROM employees WHERE department_id = dept_id;
+END$$
+
+DELIMITER ;
+CALL GetEmployeesByDepartment(3);
+___________________________________________________________
+
+
+Stored Procedure to Update an Employee's Salary
+
+
+DELIMITER $$
+
+CREATE PROCEDURE UpdateEmployeeSalary(
+    IN emp_id INT,
+    IN new_salary DECIMAL(10, 2)
+)
+BEGIN
+    UPDATE employees
+    SET salary = new_salary
+    WHERE employee_id = emp_id;
+END$$
+
+DELIMITER ;
+
+CALL UpdateEmployeeSalary(1, 70000);
+
+
+____________________________________________________________________
+
+Stored Procedure to Delete an Employee
+
+
+DELIMITER $$
+
+CREATE PROCEDURE DeleteEmployee(
+    IN emp_id INT
+)
+BEGIN
+    DELETE FROM employees WHERE employee_id = emp_id;
+END$$
+
+DELIMITER ;
+
+CALL DeleteEmployee(1);
+________________________________________________________________
+
+
+
+ Stored Procedure to Find the Total Salary by Department
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE TotalSalaryByDepartment()
+BEGIN
+    SELECT d.department_name, SUM(e.salary) AS total_salary
+    FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    GROUP BY d.department_name;
+END$$
+
+DELIMITER ;
+
+CALL TotalSalaryByDepartment();
+_________________________________________________________________
